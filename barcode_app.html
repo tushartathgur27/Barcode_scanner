@@ -1,0 +1,880 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Barcode Scanner App</title>
+    <meta name="description" content="Barcode scanning app for managing user data">
+    <meta name="theme-color" content="#2563eb">
+    <link rel="manifest" href="data:application/json;base64,ewogICJuYW1lIjogIkJhcmNvZGUgU2Nhbm5lciBBcHAiLAogICJzaG9ydF9uYW1lIjogIkJhcmNvZGUgQXBwIiwKICAiZGVzY3JpcHRpb24iOiAiQmFyY29kZSBzY2FubmluZyBhcHAgZm9yIG1hbmFnaW5nIHVzZXIgZGF0YSIsCiAgInN0YXJ0X3VybCI6ICIvIiwKICAiZGlzcGxheSI6ICJzdGFuZGFsb25lIiwKICAiYmFja2dyb3VuZF9jb2xvciI6ICIjZmZmZmZmIiwKICAidGhlbWVfY29sb3IiOiAiIzI1NjNlYiIsCiAgImljb25zIjogWwogICAgewogICAgICAic3JjIjogImRhdGE6aW1hZ2Uvc3ZnK3htbDtiYXNlNjQsUEhOMlp5QjRiV3h1Y3owaWFIUjBjRG92TDNkM2R5NTNNeTV2Y21jdk1qQXdNQzl6ZG1jaUlIZHBaSFJvUFNJeU5EQWlJR2hsYVdkb2REMGlNalF3SWo0OGNtVmpkQ0IzYVdSMGFEMGlNalF3SWlCb1pXbG5hSFE5SWpJME1DSWdabWxzYkQwaUl6STFOak5sWWlJdlBqeDBaWGgwSUhnOUlqRXlNQ0lpSUhrOUlqRXlNQ0lpSUhSbGVIUXRZVzVqYUc5eVBTSnRhV1JrYkdVaUlHWnBiR3c5SW1kc2FXTm9aWEltSUdadmJuUXRjMmw2WlQwaU16QmlaR0lpUGxOallXNXVaWEk4TDNSbGVIUStQQzl6ZG1jKyIsCiAgICAgICJzaXplcyI6ICIyNDB4MjQwIiwKICAgICAgInR5cGUiOiAiaW1hZ2Uvc3ZnK3htbCIKICAgIH0KICBdCn0=">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            color: #333;
+        }
+
+        .container {
+            max-width: 420px;
+            margin: 0 auto;
+            background: white;
+            min-height: 100vh;
+            box-shadow: 0 0 20px rgba(0,0,0,0.1);
+        }
+
+        .header {
+            background: linear-gradient(135deg, #2563eb 0%, #1d4ed8 100%);
+            color: white;
+            padding: 20px;
+            text-align: center;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        }
+
+        .header h1 {
+            font-size: 24px;
+            margin-bottom: 5px;
+        }
+
+        .header p {
+            opacity: 0.9;
+            font-size: 14px;
+        }
+
+        .main-content {
+            padding: 20px;
+        }
+
+        .stats {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 25px;
+            gap: 10px;
+        }
+
+        .stat-card {
+            flex: 1;
+            background: #f8fafc;
+            padding: 15px;
+            border-radius: 12px;
+            text-align: center;
+            border: 1px solid #e2e8f0;
+        }
+
+        .stat-number {
+            font-size: 24px;
+            font-weight: bold;
+            color: #2563eb;
+            margin-bottom: 5px;
+        }
+
+        .stat-label {
+            font-size: 12px;
+            color: #64748b;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .action-buttons {
+            display: grid;
+            gap: 15px;
+            margin-bottom: 25px;
+        }
+
+        .btn {
+            padding: 15px 20px;
+            border: none;
+            border-radius: 12px;
+            font-size: 16px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+        }
+
+        .btn-primary {
+            background: linear-gradient(135deg, #10b981 0%, #059669 100%);
+            color: white;
+            box-shadow: 0 4px 15px rgba(16, 185, 129, 0.3);
+        }
+
+        .btn-secondary {
+            background: linear-gradient(135deg, #3b82f6 0%, #2563eb 100%);
+            color: white;
+            box-shadow: 0 4px 15px rgba(59, 130, 246, 0.3);
+        }
+
+        .btn-danger {
+            background: linear-gradient(135deg, #ef4444 0%, #dc2626 100%);
+            color: white;
+            box-shadow: 0 4px 15px rgba(239, 68, 68, 0.3);
+        }
+
+        .btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 25px rgba(0,0,0,0.2);
+        }
+
+        .form-container {
+            background: #f8fafc;
+            padding: 20px;
+            border-radius: 15px;
+            margin-bottom: 20px;
+            border: 1px solid #e2e8f0;
+        }
+
+        .form-group {
+            margin-bottom: 15px;
+        }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 5px;
+            font-weight: 600;
+            color: #374151;
+        }
+
+        .form-group input {
+            width: 100%;
+            padding: 12px;
+            border: 2px solid #e5e7eb;
+            border-radius: 8px;
+            font-size: 16px;
+            transition: border-color 0.3s;
+        }
+
+        .form-group input:focus {
+            outline: none;
+            border-color: #3b82f6;
+            box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1);
+        }
+
+        .search-container {
+            position: relative;
+            margin-bottom: 20px;
+        }
+
+        .search-input {
+            width: 100%;
+            padding: 12px 40px 12px 12px;
+            border: 2px solid #e5e7eb;
+            border-radius: 10px;
+            font-size: 16px;
+        }
+
+        .search-btn {
+            position: absolute;
+            right: 5px;
+            top: 5px;
+            padding: 7px 12px;
+            background: #3b82f6;
+            color: white;
+            border: none;
+            border-radius: 6px;
+            cursor: pointer;
+        }
+
+        .data-list {
+            max-height: 400px;
+            overflow-y: auto;
+            border: 1px solid #e5e7eb;
+            border-radius: 10px;
+            background: white;
+        }
+
+        .data-item {
+            padding: 15px;
+            border-bottom: 1px solid #f3f4f6;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .data-item:last-child {
+            border-bottom: none;
+        }
+
+        .data-info h4 {
+            font-size: 16px;
+            margin-bottom: 5px;
+            color: #1f2937;
+        }
+
+        .data-info p {
+            font-size: 14px;
+            color: #6b7280;
+            margin: 2px 0;
+        }
+
+        .data-actions {
+            display: flex;
+            gap: 5px;
+        }
+
+        .btn-small {
+            padding: 6px 12px;
+            font-size: 12px;
+            border-radius: 6px;
+        }
+
+        .camera-container {
+            position: relative;
+            margin-bottom: 20px;
+            border-radius: 15px;
+            overflow: hidden;
+            background: #000;
+        }
+
+        #camera {
+            width: 100%;
+            height: 300px;
+            object-fit: cover;
+        }
+
+        .camera-overlay {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            width: 200px;
+            height: 100px;
+            border: 2px solid #10b981;
+            border-radius: 10px;
+            box-shadow: 0 0 0 2000px rgba(0,0,0,0.3);
+        }
+
+        .modal {
+            display: none;
+            position: fixed;
+            z-index: 1000;
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0,0,0,0.5);
+            backdrop-filter: blur(5px);
+        }
+
+        .modal-content {
+            background-color: white;
+            margin: 10% auto;
+            padding: 20px;
+            border-radius: 15px;
+            width: 90%;
+            max-width: 400px;
+            box-shadow: 0 20px 40px rgba(0,0,0,0.2);
+        }
+
+        .close {
+            color: #aaa;
+            float: right;
+            font-size: 28px;
+            font-weight: bold;
+            cursor: pointer;
+        }
+
+        .close:hover {
+            color: #000;
+        }
+
+        .hidden {
+            display: none;
+        }
+
+        .alert {
+            padding: 12px;
+            border-radius: 8px;
+            margin-bottom: 15px;
+            font-weight: 500;
+        }
+
+        .alert-success {
+            background-color: #d1fae5;
+            color: #065f46;
+            border: 1px solid #a7f3d0;
+        }
+
+        .alert-error {
+            background-color: #fee2e2;
+            color: #991b1b;
+            border: 1px solid #fca5a5;
+        }
+
+        .loading {
+            display: inline-block;
+            width: 20px;
+            height: 20px;
+            border: 3px solid #f3f3f3;
+            border-top: 3px solid #3498db;
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+        }
+
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+
+        .scan-result {
+            background: #e0f2fe;
+            border: 2px solid #29b6f6;
+            border-radius: 10px;
+            padding: 15px;
+            margin: 15px 0;
+            font-family: monospace;
+            font-size: 16px;
+            word-break: break-all;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>📱 Barcode Scanner</h1>
+            <p>Scan, Store & Manage User Data</p>
+        </div>
+
+        <div class="main-content">
+            <!-- Stats -->
+            <div class="stats">
+                <div class="stat-card">
+                    <div class="stat-number" id="totalUsers">0</div>
+                    <div class="stat-label">Total Users</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-number" id="lastScanned">None</div>
+                    <div class="stat-label">Last Scanned</div>
+                </div>
+            </div>
+
+            <!-- Action Buttons -->
+            <div class="action-buttons">
+                <button class="btn btn-primary" id="scanBtn">📸 Scan Barcode</button>
+                <button class="btn btn-secondary" id="manualBtn">✏️ Manual Entry</button>
+                <button class="btn btn-secondary" id="viewDataBtn">📋 View All Data</button>
+                <button class="btn btn-danger" id="clearAllBtn">🗑️ Clear All Data</button>
+            </div>
+
+            <!-- Scan Result Display -->
+            <div id="scanResult" class="scan-result hidden">
+                <strong>Scanned Code:</strong> <span id="scannedCode"></span>
+            </div>
+
+            <!-- Manual Entry Form -->
+            <div id="manualForm" class="form-container hidden">
+                <h3>👤 User Information</h3>
+                <div class="form-group">
+                    <label for="barcode">Barcode/ID:</label>
+                    <input type="text" id="barcode" placeholder="Enter barcode or unique ID">
+                </div>
+                <div class="form-group">
+                    <label for="firstName">First Name:</label>
+                    <input type="text" id="firstName" placeholder="Enter first name">
+                </div>
+                <div class="form-group">
+                    <label for="surname">Surname:</label>
+                    <input type="text" id="surname" placeholder="Enter surname">
+                </div>
+                <div class="form-group">
+                    <label for="phone">Phone Number:</label>
+                    <input type="tel" id="phone" placeholder="Enter phone number">
+                </div>
+                <div class="form-group">
+                    <label for="lockerNumber">Locker Number:</label>
+                    <input type="text" id="lockerNumber" placeholder="Enter locker number">
+                </div>
+                <div style="display: flex; gap: 10px;">
+                    <button class="btn btn-primary" id="saveBtn">💾 Save Data</button>
+                    <button class="btn" id="cancelBtn" style="background: #6b7280; color: white;">❌ Cancel</button>
+                </div>
+            </div>
+
+            <!-- Search and Data View -->
+            <div id="dataView" class="hidden">
+                <div class="search-container">
+                    <input type="text" id="searchInput" class="search-input" placeholder="Search by name, phone, or barcode...">
+                    <button class="search-btn" id="searchBtn">🔍</button>
+                </div>
+                <div class="data-list" id="dataList"></div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Camera Modal -->
+    <div id="cameraModal" class="modal">
+        <div class="modal-content">
+            <span class="close" id="closeCamera">&times;</span>
+            <h3>📸 Scan Barcode</h3>
+            <div class="camera-container">
+                <video id="camera" autoplay></video>
+                <div class="camera-overlay"></div>
+            </div>
+            <div style="text-align: center; margin-top: 15px;">
+                <button class="btn btn-danger" id="stopCamera">Stop Camera</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Edit Modal -->
+    <div id="editModal" class="modal">
+        <div class="modal-content">
+            <span class="close" id="closeEdit">&times;</span>
+            <h3>✏️ Edit User Data</h3>
+            <div class="form-group">
+                <label for="editFirstName">First Name:</label>
+                <input type="text" id="editFirstName">
+            </div>
+            <div class="form-group">
+                <label for="editSurname">Surname:</label>
+                <input type="text" id="editSurname">
+            </div>
+            <div class="form-group">
+                <label for="editPhone">Phone Number:</label>
+                <input type="tel" id="editPhone">
+            </div>
+            <div class="form-group">
+                <label for="editLockerNumber">Locker Number:</label>
+                <input type="text" id="editLockerNumber">
+            </div>
+            <div style="display: flex; gap: 10px;">
+                <button class="btn btn-primary" id="updateBtn">💾 Update</button>
+                <button class="btn" id="cancelEditBtn" style="background: #6b7280; color: white;">❌ Cancel</button>
+            </div>
+        </div>
+    </div>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/quagga/0.12.1/quagga.min.js"></script>
+    <script>
+        class BarcodeApp {
+            constructor() {
+                this.userData = this.loadData();
+                this.currentEditId = null;
+                this.isScanning = false;
+                this.init();
+            }
+
+            init() {
+                this.updateStats();
+                this.bindEvents();
+                
+                // Register service worker for PWA
+                if ('serviceWorker' in navigator) {
+                    navigator.serviceWorker.register('data:application/javascript;base64,c2VsZi5hZGRFdmVudExpc3RlbmVyKCdpbnN0YWxsJywgKCkgPT4gewogIGNvbnNvbGUubG9nKCdTZXJ2aWNlIHdvcmtlciBpbnN0YWxsZWQnKTsKfSk7CgpzZWxmLmFkZEV2ZW50TGlzdGVuZXIoJ2ZldGNoJywgZXZlbnQgPT4gewogIC8vIEJhc2ljIGZldGNoIGhhbmRsZXIKfSk7');
+                }
+            }
+
+            bindEvents() {
+                // Main buttons
+                document.getElementById('scanBtn').addEventListener('click', () => this.startScanning());
+                document.getElementById('manualBtn').addEventListener('click', () => this.showManualForm());
+                document.getElementById('viewDataBtn').addEventListener('click', () => this.showDataView());
+                document.getElementById('clearAllBtn').addEventListener('click', () => this.clearAllData());
+
+                // Form buttons
+                document.getElementById('saveBtn').addEventListener('click', () => this.saveData());
+                document.getElementById('cancelBtn').addEventListener('click', () => this.hideManualForm());
+                document.getElementById('updateBtn').addEventListener('click', () => this.updateData());
+                document.getElementById('cancelEditBtn').addEventListener('click', () => this.hideEditModal());
+
+                // Modal controls
+                document.getElementById('closeCamera').addEventListener('click', () => this.stopScanning());
+                document.getElementById('stopCamera').addEventListener('click', () => this.stopScanning());
+                document.getElementById('closeEdit').addEventListener('click', () => this.hideEditModal());
+
+                // Search
+                document.getElementById('searchBtn').addEventListener('click', () => this.searchData());
+                document.getElementById('searchInput').addEventListener('keyup', (e) => {
+                    if (e.key === 'Enter') this.searchData();
+                });
+
+                // Close modals when clicking outside
+                window.addEventListener('click', (e) => {
+                    if (e.target.classList.contains('modal')) {
+                        e.target.style.display = 'none';
+                        if (e.target.id === 'cameraModal') {
+                            this.stopScanning();
+                        }
+                    }
+                });
+            }
+
+            loadData() {
+                const data = {};
+                for (let i = 0; i < 10000; i++) {
+                    const key = `userData_${i}`;
+                    const stored = localStorage.getItem(key);
+                    if (stored) {
+                        const parsed = JSON.parse(stored);
+                        Object.assign(data, parsed);
+                    } else {
+                        break;
+                    }
+                }
+                return data;
+            }
+
+            saveData() {
+                const barcode = document.getElementById('barcode').value.trim();
+                const firstName = document.getElementById('firstName').value.trim();
+                const surname = document.getElementById('surname').value.trim();
+                const phone = document.getElementById('phone').value.trim();
+                const lockerNumber = document.getElementById('lockerNumber').value.trim();
+
+                if (!barcode || !firstName || !surname) {
+                    this.showAlert('Please fill in all required fields (Barcode, First Name, Surname)', 'error');
+                    return;
+                }
+
+                const userData = {
+                    id: barcode,
+                    firstName,
+                    surname,
+                    phone,
+                    lockerNumber,
+                    timestamp: new Date().toISOString()
+                };
+
+                this.userData[barcode] = userData;
+                this.persistData();
+                this.showAlert(`Data saved successfully for ${firstName} ${surname}`, 'success');
+                this.clearForm();
+                this.hideManualForm();
+                this.updateStats();
+                
+                // Update last scanned
+                document.getElementById('lastScanned').textContent = `${firstName} ${surname}`;
+            }
+
+            updateData() {
+                if (!this.currentEditId) return;
+
+                const firstName = document.getElementById('editFirstName').value.trim();
+                const surname = document.getElementById('editSurname').value.trim();
+                const phone = document.getElementById('editPhone').value.trim();
+                const lockerNumber = document.getElementById('editLockerNumber').value.trim();
+
+                if (!firstName || !surname) {
+                    this.showAlert('Please fill in all required fields', 'error');
+                    return;
+                }
+
+                this.userData[this.currentEditId] = {
+                    ...this.userData[this.currentEditId],
+                    firstName,
+                    surname,
+                    phone,
+                    lockerNumber,
+                    lastModified: new Date().toISOString()
+                };
+
+                this.persistData();
+                this.showAlert('Data updated successfully', 'success');
+                this.hideEditModal();
+                this.displayData();
+                this.updateStats();
+            }
+
+            deleteData(id) {
+                if (confirm('Are you sure you want to delete this record?')) {
+                    delete this.userData[id];
+                    this.persistData();
+                    this.showAlert('Record deleted successfully', 'success');
+                    this.displayData();
+                    this.updateStats();
+                }
+            }
+
+            persistData() {
+                // Clear old data
+                for (let i = 0; i < 10000; i++) {
+                    localStorage.removeItem(`userData_${i}`);
+                }
+
+                // Save new data in chunks
+                const entries = Object.entries(this.userData);
+                const chunkSize = 50; // Store 50 records per localStorage item
+                
+                for (let i = 0; i < entries.length; i += chunkSize) {
+                    const chunk = entries.slice(i, i + chunkSize);
+                    const chunkData = Object.fromEntries(chunk);
+                    localStorage.setItem(`userData_${Math.floor(i / chunkSize)}`, JSON.stringify(chunkData));
+                }
+            }
+
+            startScanning() {
+                const modal = document.getElementById('cameraModal');
+                modal.style.display = 'block';
+                
+                navigator.mediaDevices.getUserMedia({ 
+                    video: { 
+                        facingMode: 'environment',
+                        width: { ideal: 1280 },
+                        height: { ideal: 720 }
+                    } 
+                })
+                .then(stream => {
+                    const video = document.getElementById('camera');
+                    video.srcObject = stream;
+                    this.isScanning = true;
+                    this.initQuagga();
+                })
+                .catch(err => {
+                    console.error('Camera access denied:', err);
+                    this.showAlert('Camera access denied. Please allow camera access and try again.', 'error');
+                    modal.style.display = 'none';
+                });
+            }
+
+            initQuagga() {
+                Quagga.init({
+                    inputStream: {
+                        name: "Live",
+                        type: "LiveStream",
+                        target: document.querySelector('#camera'),
+                        constraints: {
+                            width: 640,
+                            height: 480,
+                            facingMode: "environment"
+                        }
+                    },
+                    locator: {
+                        patchSize: "medium",
+                        halfSample: true
+                    },
+                    numOfWorkers: 2,
+                    decoder: {
+                        readers: [
+                            "code_128_reader",
+                            "ean_reader",
+                            "ean_8_reader",
+                            "code_39_reader",
+                            "code_39_vin_reader",
+                            "codabar_reader",
+                            "upc_reader",
+                            "upc_e_reader",
+                            "i2of5_reader"
+                        ]
+                    },
+                    locate: true
+                }, (err) => {
+                    if (err) {
+                        console.log(err);
+                        this.showAlert('Barcode scanner initialization failed', 'error');
+                        return;
+                    }
+                    console.log("Initialization finished. Ready to start");
+                    Quagga.start();
+                });
+
+                Quagga.onDetected((result) => {
+                    if (this.isScanning) {
+                        const code = result.codeResult.code;
+                        console.log("Barcode detected:", code);
+                        this.handleScannedCode(code);
+                        this.stopScanning();
+                    }
+                });
+            }
+
+            handleScannedCode(code) {
+                document.getElementById('scannedCode').textContent = code;
+                document.getElementById('scanResult').classList.remove('hidden');
+                
+                // Check if user exists
+                if (this.userData[code]) {
+                    const user = this.userData[code];
+                    this.showAlert(`Found existing user: ${user.firstName} ${user.surname}`, 'success');
+                    this.editData(code);
+                } else {
+                    // Pre-fill form with scanned code
+                    document.getElementById('barcode').value = code;
+                    this.showManualForm();
+                }
+            }
+
+            stopScanning() {
+                this.isScanning = false;
+                if (typeof Quagga !== 'undefined') {
+                    Quagga.stop();
+                }
+                
+                const video = document.getElementById('camera');
+                if (video.srcObject) {
+                    video.srcObject.getTracks().forEach(track => track.stop());
+                }
+                
+                document.getElementById('cameraModal').style.display = 'none';
+            }
+
+            showManualForm() {
+                this.hideAllSections();
+                document.getElementById('manualForm').classList.remove('hidden');
+            }
+
+            hideManualForm() {
+                document.getElementById('manualForm').classList.add('hidden');
+                this.clearForm();
+            }
+
+            showDataView() {
+                this.hideAllSections();
+                document.getElementById('dataView').classList.remove('hidden');
+                this.displayData();
+            }
+
+            editData(id) {
+                const user = this.userData[id];
+                if (!user) return;
+
+                this.currentEditId = id;
+                document.getElementById('editFirstName').value = user.firstName;
+                document.getElementById('editSurname').value = user.surname;
+                document.getElementById('editPhone').value = user.phone || '';
+                document.getElementById('editLockerNumber').value = user.lockerNumber || '';
+                
+                document.getElementById('editModal').style.display = 'block';
+            }
+
+            hideEditModal() {
+                document.getElementById('editModal').style.display = 'none';
+                this.currentEditId = null;
+            }
+
+            displayData(filteredData = null) {
+                const dataList = document.getElementById('dataList');
+                const data = filteredData || this.userData;
+                
+                if (Object.keys(data).length === 0) {
+                    dataList.innerHTML = '<div style="text-align: center; padding: 40px; color: #6b7280;">No data found</div>';
+                    return;
+                }
+
+                const html = Object.values(data).map(user => `
+                    <div class="data-item">
+                        <div class="data-info">
+                            <h4>${user.firstName} ${user.surname}</h4>
+                            <p><strong>ID:</strong> ${user.id}</p>
+                            <p><strong>Phone:</strong> ${user.phone || 'Not provided'}</p>
+                            <p><strong>Locker:</strong> ${user.lockerNumber || 'Not assigned'}</p>
+                        </div>
+                        <div class="data-actions">
+                            <button class="btn btn-secondary btn-small" onclick="app.editData('${user.id}')">✏️ Edit</button>
+                            <button class="btn btn-danger btn-small" onclick="app.deleteData('${user.id}')">🗑️ Delete</button>
+                        </div>
+                    </div>
+                `).join('');
+
+                dataList.innerHTML = html;
+            }
+
+            searchData() {
+                const query = document.getElementById('searchInput').value.toLowerCase().trim();
+                
+                if (!query) {
+                    this.displayData();
+                    return;
+                }
+
+                const filteredData = {};
+                Object.entries(this.userData).forEach(([id, user]) => {
+                    const searchText = `${user.firstName} ${user.surname} ${user.phone} ${user.id} ${user.lockerNumber}`.toLowerCase();
+                
+                if (searchText.includes(query)) {
+                    filteredData[id] = user;
+                }
+            });
+
+            this.displayData(filteredData);
+        }
+
+        clearAllData() {
+            if (confirm('Are you sure you want to delete ALL data? This action cannot be undone.')) {
+                this.userData = {};
+                for (let i = 0; i < 10000; i++) {
+                    localStorage.removeItem(`userData_${i}`);
+                }
+                this.updateStats();
+                this.displayData();
+                this.showAlert('All data cleared successfully', 'success');
+                document.getElementById('lastScanned').textContent = 'None';
+            }
+        }
+
+        hideAllSections() {
+            document.getElementById('manualForm').classList.add('hidden');
+            document.getElementById('dataView').classList.add('hidden');
+            document.getElementById('scanResult').classList.add('hidden');
+        }
+
+        clearForm() {
+            document.getElementById('barcode').value = '';
+            document.getElementById('firstName').value = '';
+            document.getElementById('surname').value = '';
+            document.getElementById('phone').value = '';
+            document.getElementById('lockerNumber').value = '';
+        }
+
+        updateStats() {
+            document.getElementById('totalUsers').textContent = Object.keys(this.userData).length.toLocaleString();
+        }
+
+        showAlert(message, type) {
+            const alertDiv = document.createElement('div');
+            alertDiv.className = `alert alert-${type}`;
+            alertDiv.textContent = message;
+            
+            const container = document.querySelector('.main-content');
+            container.insertBefore(alertDiv, container.firstChild);
+            
+            setTimeout(() => {
+                alertDiv.remove();
+            }, 5000);
+        }
+    }
+
+    // Initialize app when DOM is loaded
+    let app;
+    document.addEventListener('DOMContentLoaded', () => {
+        app = new BarcodeApp();
+    });
+
+    // PWA Install prompt
+    let deferredPrompt;
+    window.addEventListener('beforeinstallprompt', (e) => {
+        e.preventDefault();
+        deferredPrompt = e;
+        
+        // Show install button or prompt
+        const installBtn = document.createElement('button');
+        installBtn.textContent = '📱 Install App';
+        installBtn.className = 'btn btn-secondary';
+        installBtn.style.position = 'fixed';
+        installBtn.style.bottom = '20px';
+        installBtn.style.right = '20px';
+        installBtn.style.zIndex = '1000';
+        
+        installBtn.addEventListener('click', () => {
+            deferredPrompt.prompt();
+            deferredPrompt.userChoice.then((choiceResult) => {
+                if (choiceResult.outcome === 'accepted') {
+                    console.log('User accepted the install prompt');
+                }
+                deferredPrompt = null;
+                installBtn.remove();
+            });
+        });
+        
+        document.body.appendChild(installBtn);
+    });
+    </script>
+</body>
+</html>
